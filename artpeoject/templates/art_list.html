@@ -1,0 +1,57 @@
+{% extends "layout.html"%}
+{% import "page.html" as pg %}
+
+<!-- 更改表格中的元素居中显示，bootstrap默认是居顶显示-->
+    <!-- 使用浏览器检查元素，查找到元素样式。复制进来进行更改-->
+{% block css%}
+<style>
+    .table td, .table th {
+    vertical-align: middle;
+}
+</style>
+{% endblock%}
+
+{% block content%}
+{% for msg in get_flashed_messages(category_filter=["login ok"])%}
+            <p style="color:green">{{ msg }}</p>
+{%endfor%}
+{% for msg in get_flashed_messages(category_filter=["art add ok"])%}
+            <p style="color:green">{{ msg }}</p>
+{%endfor%}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>标题</th>
+            <th>分类</th>
+            <th>封面</th>
+            <th>作者</th>
+            <th>发布时间</th>
+            <th>管理操作</th>
+        </tr>
+    </thead>
+    {% for v in page_data.items %}
+    <tr>
+        <td>{{ v.title}}</td>
+        <td>{{ v.cate}}</td>
+        <td>
+            <img src="/static/userlogo/{{ v.logo }}" style="height:40px; weight:75px">
+        </td>
+        <td>{{ session["username"]}} </td>
+        <td>{{ v.addtime}} </td>
+        <td>
+            <button class="btn btn-sm btn-outline-warning">编辑</button>
+            <button class="btn btn-sm btn-outline-danger">删除</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{{ pg.page(page_data,'art_list') }}
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function() {
+        $("#m2").addClass("active");
+    });
+</script>
+{% endblock %}

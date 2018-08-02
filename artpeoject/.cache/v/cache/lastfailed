@@ -1,0 +1,4 @@
+{
+  "models.py::testadmin": true,
+  "models.py::testrole": true
+}

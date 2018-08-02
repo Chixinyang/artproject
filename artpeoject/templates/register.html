@@ -1,0 +1,49 @@
+{% extends "user.html" %}
+{%block content%}
+<form method="post">
+    {% for msg in get_flashed_messages(category_filter=["register err"])%}
+    <p style="color:blue">{{ msg }}</p>
+    {%endfor%}
+    <div class="form-group">
+        <label>账号</label>
+        {{form.name}}
+        {% for v in form.name.errors %}
+        <p style="color:red">{{ v }}</p>
+        {%endfor%}
+    </div>
+    <div class="form-group">
+        <label>密码</label>
+        {{form.pwd}}
+        {% for v in form.pwd.errors %}
+        <p style="color:red">{{ v }}</p>
+        {%endfor%}
+    </div>
+    <div class="form-group">
+        <label>确认密码</label>
+        {{form.repwd}}
+        {% for v in form.repwd.errors %}
+        <p style="color:red">{{ v }}</p>
+        {%endfor%}
+    </div>
+    <div class="form-group">
+        <label>验证码</label>
+        {{form.code}}
+        {% for v in form.code.errors %}
+        <p style="color:red">{{ v }}</p>
+        {%endfor%}
+        <!--
+        <img alt="点击切换" title="点击图片切换" src="/verifycode/" onclick="javascript:this.src=this.src+'?time='+Math.random()"
+             style="height:60px; weight:150px ;margin-top: 10px;">
+        -->
+        <img alt="点击切换" title="点击图片切换" src="/verifycode/" onclick="this.src=this.src+'?'+Math.random()"
+             style="height:60px; weight:150px ;margin-top: 10px;">
+    </div>
+    <a href="/login/">已有账号，前往登录</a><br>
+    {{form.submit}}
+    {{form.csrf_token}}
+</form>
+{% endblock%}
+
+{% block js%}
+<script src="https://cdn.bootcss.com/holder/2.9.4/holder.js"></script>
+{% endblock%}
