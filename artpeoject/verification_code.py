@@ -98,8 +98,25 @@ class Verify_Code:
             return myfonts["{}".format(random.randint(1, 3))]
         return font_file
 
-
+# 生成图片
+def create_img():
+    # 创建图片
+    height = 160  # px
+    weight = 300
+    image = Image.new("RGB", (weight, height), (192, 192, 192))
+    image_name = "{}.jpeg".format("logo")
+    image_doc = os.path.join(os.path.dirname(__file__), "static{0}userlogo".format(os.sep))
+    if not os.path.exists(image_doc):
+        os.mkdir(image_doc)
+    # 图片路径属于对象
+    image_path = os.path.join(image_doc, image_name)
+    print(image_path)
+    image.save(image_path, format="jpeg")
+    image.show()
 if __name__ == '__main__':
+    create_img()
+    '''
     c = Verify_Code()
     print(c.random_chr(), c.random_disturb_chr())
     c.create_verification_code()
+    '''

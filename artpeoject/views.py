@@ -3,14 +3,14 @@
 from datetime import datetime
 from functools import wraps
 from flask import Flask, render_template, redirect, flash, Response, session, url_for, request
-from forms import LoginForm, RegisterForm, ArtAddForm
+from forms import LoginForm, RegisterForm, ArtAddForm, ArtEditForm
 from models import User, db, Art
 from verification_code import Verify_Code
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
-#查看 分页类的成员
-#from flask_sqlalchemy import Pagination
+# 查看 分页类的成员
+# from flask_sqlalchemy import Pagination
 import os
 
 app = Flask(__name__)
@@ -108,7 +108,53 @@ def art_list(page_num):
 @app.route("/art/edit/<int:id>", methods=["GET", "POST"])
 @Access_Control
 def art_edit(id):
-    return render_template("art_edit.html")  # 渲染模板
+    form = ArtEditForm()
+    art = Art.query.get_or_404(int(id))
+    old_logo = art.logo
+    form.art_id.data=int(id)
+    if request.method == "GET":
+        # 获取cate
+        choices = {
+            '1': "科技",
+            '2': "搞笑",
+            '3': "军事"
+        }
+        for key, value in choices.items():
+            if value == art.cate:
+                form.cate.data = int(key)
+        form.content.data = art.content
+        showlog(key + " :" + art.cate)
+    else:
+        if form.validate_on_submit():
+            showlog("验证通过")
+            data = form.data
+            art.title = data["title"]
+            art_cate = [(1, "科技"), (2, "搞笑"), (3, "军事")]
+            art.cate = art_cate[data["cate"] - 1][1]
+            art.content = data["content"]
+            if not form.logo.data.filename :
+                art.logo = old_logo
+                pass
+            else :
+                # 获取logo文件并改名
+                logo_source_filepath = secure_filename(form.logo.data.filename)
+                logo = change_logo_name(str(logo_source_filepath))
+                # logo保存到本地
+                if not os.path.exists(app.config["UP_PATH"]):
+                    os.mkdir(app.config["UP_PATH"])
+                logo_path = os.path.join(app.config["UP_PATH"], logo)
+                form.logo.data.save(logo_path)
+                # 删除旧的logo
+                old_logo_path = os.path.join(app.config["UP_PATH"], old_logo)
+                showlog("new :" + logo_path + " old:" + old_logo_path)
+                os.remove(old_logo_path)
+                art.logo = logo
+            db.session.add(art)
+            db.session.commit()
+            flash("文章编辑成功", "art edit ok")
+        else:
+            showlog("编辑失败")
+    return render_template("art_edit.html", title="编辑文章", form=form, art=art)  # 渲染模板
 
 
 # 发布文章
