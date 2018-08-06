@@ -18,6 +18,9 @@
 {% for msg in get_flashed_messages(category_filter=["art add ok"])%}
             <p style="color:green">{{ msg }}</p>
 {%endfor%}
+{% for msg in get_flashed_messages(category_filter=["art del ok"])%}
+            <p style="color:green">{{ msg }}</p>
+{%endfor%}
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -40,7 +43,7 @@
         <td>{{ v.addtime}} </td>
         <td>
             <a href="/art/edit/{{v.id}}" class="btn btn-sm btn-outline-warning">编辑</a>
-            <button class="btn btn-sm btn-outline-danger">删除</button>
+            <a href="{{url_for('art_del',id=v.id)}}" class="btn btn-sm btn-outline-danger">删除</a>
         </td>
     </tr>
     {% endfor %}

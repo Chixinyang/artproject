@@ -35,6 +35,10 @@ def Access_Control(func):
 
 
 # 定义路由
+@app.route("/",methods=["GET", "POST"])
+def index():
+    return redirect("/login/")
+
 # 登录
 @app.route("/login/", methods=["GET", "POST"])
 def login():
@@ -212,7 +216,15 @@ def art_add():
 @app.route("/art/del/<int:id>", methods=["GET"])
 @Access_Control
 def art_del(id):
-    return render_template("art_delete.html")  # 渲染模板
+    art=Art.query.get_or_404(int(id)) #注意这里的一定要转成int类型
+    art_logo_path = os.path.join(app.config["UP_PATH"],art.logo)
+    os.remove(art_logo_path)
+    showlog("删除logo :{}".format(art_logo_path))
+    db.session.delete(art)
+    db.session.commit()
+    flash("成功删除文章《{}》".format(art.title), "art del ok")
+    return redirect("/art/list/1")
+   # return render_template("art_delete.html")  # 渲染模板
 
 
 # 验证码

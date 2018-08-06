@@ -1,7 +1,7 @@
 # coding=utf-8
 from flask_wtf import FlaskForm
 from flask_wtf.file import file_required
-from wtforms import StringField, PasswordField, SubmitField, SelectField, FileField, TextAreaField,IntegerField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, FileField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired, EqualTo, ValidationError
 from models import User
 from flask import session
@@ -188,12 +188,14 @@ class ArtAddForm(FlaskForm):
     logo = FileField(
         label="封面",
         validators=[
-            #DataRequired("封面不能为空"),
-           file_required("封面不能为空"),
+            # DataRequired("封面不能为空"),
+            file_required("封面不能为空"),
         ],
         description="封面",
         render_kw={
-            "class": "form-control-file"
+            "class": "form-control-file",
+            "id": "imgOne1",
+            "onchange": "preImg(this.id,'imgPre')"
         }
     )
     content = TextAreaField(
@@ -216,6 +218,8 @@ class ArtAddForm(FlaskForm):
             "href": "/art/list/1"
         }
     )
+
+
 class ArtEditForm(FlaskForm):
     art_id = IntegerField(
         label="art_id",
@@ -256,8 +260,8 @@ class ArtEditForm(FlaskForm):
     logo = FileField(
         label="封面",
         validators=[
-            #DataRequired("封面不能为空"),
-           #file_required("封面不能为空"),
+            # DataRequired("封面不能为空"),
+            # file_required("封面不能为空"),
         ],
         description="封面",
         render_kw={

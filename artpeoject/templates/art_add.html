@@ -9,47 +9,41 @@
 
 {% block content%}
 <form method="post" enctype="multipart/form-data">
-<div class="form-group">
-    <label>标题</label>
-    {{form.title}}
-    {% for v in form.title.errors %}
-    <p style="color:red">{{ v }}</p>
-    {% endfor%}
-</div>
-<div class="form-group">
-    <label>分类</label>
-    {{form.cate}}
-    {% for v in form.cate.errors %}
-    <p style="color:red">{{ v }}</p>
-    {%endfor%}
-</div>
-<div class="form-group">
-    <label>封面</label>
-    {{form.logo}}
-    {% for v in form.logo.errors %}
-    <p style="color:red">{{ v }}</p>
-    {% endfor%}
-    <img data-src="holder.js/300x160" style="margin-top: 6px">
-    <!--
-    <img data-src="holder.js/300x160" style="margin-top: 6px">
-    <img src="/static/userlogo/{{ v.logo }}" style="height:40px; weight:75px">
-        <img alt="点击切换" title="点击图片切换" src="/verifycode/" onclick="this.src=this.src+'?'+Math.random()"
-             style="height:60px; weight:150px ;margin-top: 10px;">
-    <br>
-    <a class="btn btn-primary" style="margin-top:6px;">上传封面</a>
-    -->
-</div>
-<div class="form-group">
-    <label>内容</label>
-    {{form.content}}
-    {% for v in form.content.errors %}
-    <p style="color:red">{{ v }}</p>
-    {%endfor%}
-</div>
-<div class="form-group">
-    {{form.submit}}
-    {{form.csrf_token}}
-</div>
+    <div class="form-group">
+        <label>标题</label>
+        {{form.title}}
+        {% for v in form.title.errors %}
+        <p style="color:red">{{ v }}</p>
+        {% endfor%}
+    </div>
+    <div class="form-group">
+        <label>分类</label>
+        {{form.cate}}
+        {% for v in form.cate.errors %}
+        <p style="color:red">{{ v }}</p>
+        {%endfor%}
+    </div>
+    <div class="form-group">
+        <label>封面</label>
+        {{form.logo}}
+        {% for v in form.logo.errors %}
+        <p style="color:red">{{ v }}</p>
+        {% endfor%}
+        <!--<img data-src="holder.js/300x160" style="margin-top: 6px">-->
+        <img id="imgPre" src="" width="300px" height="160px"
+             style="margin-top: 6px; display: block;"/>
+    </div>
+    <div class="form-group">
+        <label>内容</label>
+        {{form.content}}
+        {% for v in form.content.errors %}
+        <p style="color:red">{{ v }}</p>
+        {%endfor%}
+    </div>
+    <div class="form-group">
+        {{form.submit}}
+        {{form.csrf_token}}
+    </div>
 </form>
 
 {% endblock %}
@@ -59,6 +53,25 @@
     $(document).ready(function() {
         $("#m1").addClass("active");
     });
+
+    function getFileUrl(sourceId) {
+        var url;
+        if (navigator.userAgent.indexOf("MSIE")>=1) { // IE
+        url = document.getElementById(sourceId).value;
+    }
+        else if(navigator.userAgent.indexOf("Firefox")>0) { // Firefox
+        url = window.URL.createObjectURL(document.getElementById(sourceId).files.item(0));
+    }
+        else if(navigator.userAgent.indexOf("Chrome")>0) { // Chrome
+        url = window.URL.createObjectURL(document.getElementById(sourceId).files.item(0));
+    }
+        return url;
+    }
+    function preImg(sourceId, targetId) {
+        var url = getFileUrl(sourceId);
+        var imgPre = document.getElementById(targetId);
+        imgPre.src = url;
+    }
 
 
 </script>
