@@ -35,9 +35,10 @@ def Access_Control(func):
 
 
 # 定义路由
-@app.route("/",methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def index():
     return redirect("/login/")
+
 
 # 登录
 @app.route("/login/", methods=["GET", "POST"])
@@ -112,10 +113,11 @@ def art_list(page_num):
 @app.route("/art/edit/<int:id>", methods=["GET", "POST"])
 @Access_Control
 def art_edit(id):
-    form = ArtEditForm()
+    values = CombinedMultiDict([request.files, request.form])
+    form = ArtEditForm(values)
     art = Art.query.get_or_404(int(id))
     old_logo = art.logo
-    form.art_id.data=int(id)
+    form.art_id.data = int(id)
     if request.method == "GET":
         # 获取cate
         choices = {
@@ -136,10 +138,10 @@ def art_edit(id):
             art_cate = [(1, "科技"), (2, "搞笑"), (3, "军事")]
             art.cate = art_cate[data["cate"] - 1][1]
             art.content = data["content"]
-            if not form.logo.data.filename :
+            if type(form.logo.data) == type("str"):
                 art.logo = old_logo
                 pass
-            else :
+            else:
                 # 获取logo文件并改名
                 logo_source_filepath = secure_filename(form.logo.data.filename)
                 logo = change_logo_name(str(logo_source_filepath))
@@ -216,15 +218,17 @@ def art_add():
 @app.route("/art/del/<int:id>", methods=["GET"])
 @Access_Control
 def art_del(id):
-    art=Art.query.get_or_404(int(id)) #注意这里的一定要转成int类型
-    art_logo_path = os.path.join(app.config["UP_PATH"],art.logo)
+    art = Art.query.get_or_404(int(id))  # 注意这里的一定要转成int类型
+    art_logo_path = os.path.join(app.config["UP_PATH"], art.logo)
     os.remove(art_logo_path)
     showlog("删除logo :{}".format(art_logo_path))
     db.session.delete(art)
     db.session.commit()
     flash("成功删除文章《{}》".format(art.title), "art del ok")
     return redirect("/art/list/1")
-   # return render_template("art_delete.html")  # 渲染模板
+
+
+# return render_template("art_delete.html")  # 渲染模板
 
 
 # 验证码

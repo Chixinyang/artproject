@@ -81,13 +81,11 @@ class Verify_Code:
     def get_font(self):
         # 获取字体
         # 获取随机的字体文件
-        flag = False
+        flag = True
         font_file = "arial.ttf"
         if flag:
-            # font_name = random.randint(1, 3)
-            # font_file=os.path.join(os.path.dirname(__file__),"static{0}fonts{0}{1}.TTF".format(os.sep,font_name))
-            # font_file = os.path.join(os.getcwd(), "static{0}fonts{0}{1}.TTF".format(os.sep, font_name))
-            # font_file = "{1}.TTF".format(os.sep, font_name)
+            font_name = random.randint(1, 3)
+            font_file=os.path.join(os.path.dirname(__file__),"static{0}fonts{0}{1}.TTF".format(os.sep,font_name),)
             pass
         else:  # Windows 系统
             myfonts = {
@@ -110,13 +108,10 @@ def create_img():
         os.mkdir(image_doc)
     # 图片路径属于对象
     image_path = os.path.join(image_doc, image_name)
-    print(image_path)
+    print(str(image_path))
     image.save(image_path, format="jpeg")
     image.show()
 if __name__ == '__main__':
-    create_img()
-    '''
     c = Verify_Code()
     print(c.random_chr(), c.random_disturb_chr())
     c.create_verification_code()
-    '''

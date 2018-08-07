@@ -265,7 +265,9 @@ class ArtEditForm(FlaskForm):
         ],
         description="封面",
         render_kw={
-            "class": "form-control-file"
+            "class": "form-control-file",
+            "id": "imgOne1",
+            "onchange": "preImg(this.id,'imgPre')"
         }
     )
     content = TextAreaField(

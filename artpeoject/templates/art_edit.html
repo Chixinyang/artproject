@@ -33,7 +33,7 @@
     {% for v in form.logo.errors %}
     <p style="color:red">{{ v }}</p>
     {% endfor%}
-    <img src="/static/userlogo/{{ art.logo }}" style="height:160px; weight:300px;margin-top: 6px">
+    <img id="imgPre" src="/static/userlogo/{{ art.logo }}" style="height:160px; weight:300px;margin-top: 6px">
     <!--<img data-src="holder.js/300x160" style="margin-top: 6px"> -->
     <br>
     <a class="btn btn-primary" style="margin-top:6px;">上传封面</a>
@@ -58,7 +58,24 @@
     $(document).ready(function() {
         $("#m1").addClass("active");
     });
-
+      function getFileUrl(sourceId) {
+        var url;
+        if (navigator.userAgent.indexOf("MSIE")>=1) { // IE
+        url = document.getElementById(sourceId).value;
+    }
+        else if(navigator.userAgent.indexOf("Firefox")>0) { // Firefox
+        url = window.URL.createObjectURL(document.getElementById(sourceId).files.item(0));
+    }
+        else if(navigator.userAgent.indexOf("Chrome")>0) { // Chrome
+        url = window.URL.createObjectURL(document.getElementById(sourceId).files.item(0));
+    }
+        return url;
+    }
+    function preImg(sourceId, targetId) {
+        var url = getFileUrl(sourceId);
+        var imgPre = document.getElementById(targetId);
+        imgPre.src = url;
+    }
 
 </script>
 {% endblock %}
